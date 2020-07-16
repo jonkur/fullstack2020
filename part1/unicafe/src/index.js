@@ -6,39 +6,35 @@ const Button = ({clickHandler, label}) => (
 )
 
 const Statistic = ({text, value}) => (
-  <p>{text}: {value}</p>
+  <tr>
+    <td>{text}: </td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({stats}) => {
   if (stats.total === 0) {
     return (
-      <>
+      <div>
         <p>No feedback given</p>
-      </>
+      </div>
     )
   }
   return (
   <div>
     <h4>Current statistics:</h4>
-    <Statistic text="Good" value={stats.good} />
-    <Statistic text="Neutral" value={stats.neutral} />
-    <Statistic text="Bad" value={stats.bad} />
-    <Statistic text="Total" value={stats.total} />
-    <Statistic text="Average" value={stats.avg} />
-    <Statistic text="Positive" value={stats.percentGood} />
+    <table>
+      <tbody>
+        <Statistic text="Good" value={stats.good} />
+        <Statistic text="Neutral" value={stats.neutral} />
+        <Statistic text="Bad" value={stats.bad} />
+        <Statistic text="Total" value={stats.total} />
+        <Statistic text="Average" value={stats.avg} />
+        <Statistic text="Positive" value={stats.percentGood + '%'} />
+      </tbody>
+    </table>
   </div>
   )
-}
-
-const handleFeedbackClick = (value, stats, setStats) => {
-  const newStats = {...stats}
-  if (value > 0) newStats.good++
-  if (value === 0) newStats.neutral++
-  if (value < 0) newStats.bad++
-  newStats.total++
-  newStats.avg = (newStats.good - newStats.bad) / newStats.total
-  newStats.percentGood = newStats.good / newStats.total * 100
-  setStats(newStats)
 }
 
 const App = () => {
@@ -51,12 +47,23 @@ const App = () => {
     percentGood: 0
   })
 
+  const handleFeedbackClick = (value) => {
+    const newStats = {...stats}
+    if (value > 0) newStats.good++
+    if (value === 0) newStats.neutral++
+    if (value < 0) newStats.bad++
+    newStats.total++
+    newStats.avg = (newStats.good - newStats.bad) / newStats.total
+    newStats.percentGood = newStats.good / newStats.total * 100
+    setStats(newStats)
+  }
+
   return (
     <div>
         <h3>Give us some feedback:</h3>
-        <Button clickHandler={() => handleFeedbackClick(1, stats, setStats)} label={"Good!"} />
-        <Button clickHandler={() => handleFeedbackClick(0, stats, setStats)} label={"Neutral"} />
-        <Button clickHandler={() => handleFeedbackClick(-1, stats, setStats)} label={"Bad!"} />
+        <Button clickHandler={() => handleFeedbackClick(1)} label={"Good!"} />
+        <Button clickHandler={() => handleFeedbackClick(0)} label={"Neutral"} />
+        <Button clickHandler={() => handleFeedbackClick(-1)} label={"Bad!"} />
         <Statistics stats={stats} />
     </div>
   )
