@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NewContactForm = ({newName, newNumber, handleSubmit, handleNewName, handleNewNumber}) => (
+const NewPersonForm = ({newName, newNumber, handleSubmit, handleNewName, handleNewNumber}) => (
     <div>
       <h4>Add new contact:</h4>
       <form onSubmit={handleSubmit}>
@@ -17,4 +17,4 @@ const NewContactForm = ({newName, newNumber, handleSubmit, handleNewName, handle
     </div>
   )
 
-  export default NewContactForm
+  export default NewPersonForm
