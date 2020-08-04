@@ -7,6 +7,7 @@ morgan.token('postinfo', function (req, res) {
     return req.method === 'POST' ? JSON.stringify(req.body) : ''
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postinfo'))
+app.use(express.static('build'))
 
 let persons = [
     {
@@ -79,7 +80,7 @@ app.delete('/api/persons/:id', (req, res) => {
     return res.status(204).end()
 })
 
-PORT = 3001
+PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`)
 })
