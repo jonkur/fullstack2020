@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const Person = require('./models/person')
 
 app.use(express.json())
 morgan.token('postinfo', function (req, res) {
@@ -39,7 +41,9 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -65,13 +69,16 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const randId = Math.floor(Math.random() * 1000000000)
-    const person = {id: randId,
-                    name: body.name,
-                    number: body.number
-                   }
-    persons = persons.concat(person)
-    res.json(person)
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+    person.save().then(savedPerson => {
+        console.log(`Saved ${savedPerson.name} with number ${savedPerson.number} to phonebook.`);
+        res.json(savedPerson)
+    })
+    //persons = persons.concat(person)
+    //res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
