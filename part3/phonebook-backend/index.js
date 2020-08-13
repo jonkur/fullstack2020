@@ -46,29 +46,31 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.post('/api/persons', (req, res, next) => {
     const body = req.body
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+    person.save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(savedAndFormattedPerson => {
+            console.log(`Saved ${savedAndFormattedPerson.name} with number ${savedAndFormattedPerson.number} to phonebook.`);
+            res.json(savedAndFormattedPerson)
+    }).catch(err => next(err))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
     if (!body.name || ! body.number) {
         return res.status(400).json({
             error: "Name and number must be supplied."
         })
     }
-
-    const person = new Person({
+    const person = {
         name: body.name,
         number: body.number
-    })
-    person.save().then(savedPerson => {
-        console.log(`Saved ${savedPerson.name} with number ${savedPerson.number} to phonebook.`);
-        res.json(savedPerson)
-    }).catch(err => next(err))
-})
-
-app.put('/api/persons/:id', (req, res, next) => {
-    const person = {
-        name: req.body.name,
-        number: req.body.number
     }
     
-    Person.findByIdAndUpdate(req.params.id, person, { new: true }).then(updatedPerson => {
+    Person.findByIdAndUpdate(req.params.id, person, { runValidators: true, context: 'query', new: true }).then(updatedPerson => {
         res.json(updatedPerson)
     }).catch(err => next(err))
 })
@@ -84,6 +86,8 @@ app.delete('/api/persons/:id', (req, res, err) => {
 const errorHandler = (err, req, res, next) => {    
     if (err.name === 'CastError') {
         return res.status(400).send({ error: 'Malformed ID!' })
+    } else if (err.name === 'ValidationError') {
+        return res.status(400).json({ error: err.message })
     }
     next(err)
 }
