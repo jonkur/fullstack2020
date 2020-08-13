@@ -28,9 +28,11 @@ const App = () => {
           .then(updatedPerson => {
             setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson))
             setNotification(`Number for ${updatedPerson.name} was changed.`, false, 2000)
-          }).catch(e => {
-            setPersons(persons.filter(p => p.id !== personToUpdate.id))
-            setNotification(`Entry for ${personToUpdate.name} has been removed, cannot update.`, true, 3000)
+          }).catch(err => {
+            //setNotification(`${err.response.data.error}`, true, 3000)
+            //setPersons(persons.filter(p => p.id !== personToUpdate.id))
+            //setNotification(`Entry for ${personToUpdate.name} has been removed, cannot update.`, true, 3000)
+            setNotification(`Error updating entry. Make sure that the existing entry is not removed and that the new phone number is formatted correctly!`, true, 3000)
           })
           setNewName('')
           setNewNumber('')
@@ -41,6 +43,9 @@ const App = () => {
       .then(addedPerson => {
         setPersons(persons.concat(addedPerson))
         setNotification(`Added ${addedPerson.name}.`, false, 2000)
+      })
+      .catch(err => {
+        setNotification(`${err.response.data.error}`, true, 3000)
       })
     setNewName('')
     setNewNumber('')

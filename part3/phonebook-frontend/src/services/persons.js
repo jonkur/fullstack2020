@@ -10,18 +10,31 @@ const getAll = () => {
 
 const create = (person) => {
     return axios.post(baseUrl, person)
-        .then(res => res.data)
-        .catch(e => console.log(e))
+        .then(res => {
+            return res.data
+        })
+        .catch(err => {  
+            console.log(err.response);
+            throw err
+        })
 }
 
 const update = (person) => {
     return axios.put(`${baseUrl}/${person.id}/`, {name: person.name, number: person.number})
         .then(res => res.data)
+        .catch(err => {
+            console.log(err.response);
+            throw err
+        })
 }
 
 const remove = (person) => {
     return axios.delete(`${baseUrl}/${person.id}`)
         .then(res => person)
+        .catch(err => {
+            console.log(err.response)
+            throw err
+        })
 }
 
 export default {
