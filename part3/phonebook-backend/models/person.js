@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false)
 
 const atlas_url = process.env.MONGODB_URI
 console.log(`Connecting to ${atlas_url}`);
