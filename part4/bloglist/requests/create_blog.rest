@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "A test blog",
+  "author": "A test author",
+  "url": "some.dummy.url/tonowhere",
+  "likes": 0
+}
