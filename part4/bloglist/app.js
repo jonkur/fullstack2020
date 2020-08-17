@@ -9,12 +9,12 @@ const logger = require('./utils/logger')
 
 logger.info('Connecting to MongoDB database...')
 mongoose.connect(config.ATLAS_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        logger.info('Connection to MongoDB succesfully established!')
-    })
-    .catch(err => {
-        logger.error('Error connecting to MongoDB database:', err)
-    })
+  .then(() => {
+    logger.info('Connection to MongoDB succesfully established!')
+  })
+  .catch(err => {
+    logger.error('Error connecting to MongoDB database:', err)
+  })
 
 app.use(cors())
 app.use(express.json())
