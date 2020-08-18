@@ -98,8 +98,25 @@ describe('author with most blogs', () => {
     expect(result).toEqual({})
   })
 
-  test('is the only one in an array that only contains one blog', () => {
+  test('is the only one in an array that only contains one blog, with only one blog posted', () => {
     const result = listHelper.mostBlogs( [dummyBlogs[0]] )
     expect(result).toEqual({ author: dummyBlogs[0].author, blogs: 1 })
   }) 
+})
+
+describe('author with most likes', () => {
+  test('is the right one', () => {
+    const result = listHelper.mostLikes(dummyBlogs)
+    expect(result).toEqual({ author: "Edsger W. Dijkstra", likes: 17 })
+  })
+
+  test('is an empty object if empty list is passed to the function', () => {
+    const result = listHelper.mostLikes([])
+    expect(result).toEqual({})
+  })
+
+  test('is the only one in an array that only contains one blog, with the right amount of likes', () => {
+    const result = listHelper.mostLikes( [dummyBlogs[0]] )
+    expect(result).toEqual({ author: dummyBlogs[0].author, likes: 7 })
+  })
 })
