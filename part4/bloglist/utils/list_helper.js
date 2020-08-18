@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const blog = require("../models/blog")
 
 const dummy = (blogs) => {
@@ -19,8 +20,32 @@ const favoriteBlog = (blogs) => {
   }, {})
 }
 
+const mostBlogs = (blogs) => {
+  if (!blogs || !blogs.length) {
+    return {}
+  }  
+
+  // Lodash implementation
+  return _.zipObject(['author', 'blogs'], _(blogs).countBy(blog => {
+    return blog.author
+  }).entries().maxBy(blog => blog[1]))
+  
+  // Non-Lodash implementation
+  /*const blogCounts = {}
+  blogs.forEach(blog => {
+    blogCounts[blog.author] = blogCounts[blog.author]
+      ? blogCounts[blog.author] + 1
+      : 1
+  })
+  const blogCountsSorted = Object.entries(blogCounts).sort((a,b) => {
+    return b[1] - a[1]
+  })
+  return { author: blogCountsSorted[0][0], blogs: blogCountsSorted[0][1] }*/
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }

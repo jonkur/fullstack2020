@@ -47,8 +47,7 @@ const dummyBlogs = [{
   url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
   likes: 2,
   __v: 0
-}
-]
+}]
 
 test('dummy returns one', () => {
   const blogs = []
@@ -86,4 +85,21 @@ describe('favourite blog', () => {
     const result = listHelper.favoriteBlog([])
     expect(result).toEqual({})
   })
+})
+
+describe('author with most blogs', () => {
+  test('is the right one', () => {
+    const result = listHelper.mostBlogs(dummyBlogs)
+    expect(result).toEqual({ author: 'Robert C. Martin', blogs: 3 })
+  })
+
+  test('is an empty object if empty list is passed to the function', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toEqual({})
+  })
+
+  test('is the only one in an array that only contains one blog', () => {
+    const result = listHelper.mostBlogs( [dummyBlogs[0]] )
+    expect(result).toEqual({ author: dummyBlogs[0].author, blogs: 1 })
+  }) 
 })
