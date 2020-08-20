@@ -16,7 +16,7 @@ beforeEach(async () => {
 })
 
 describe('route GET /', () => {
-  test('returns the correct amonut of blogs', async () => {
+  test('returns the correct amount of blogs', async () => {
     const res = await api.get('/api/blogs')
       .expect(200)
       .expect('Content-type', /application\/json/)
@@ -58,7 +58,7 @@ describe('route POST /', () => {
     expect(savedBlog.url).toEqual(blog.url)
   })
 
-  test.only('adds the \'likes\' property to the new blog object if it is not provided', async () => {
+  test('adds the \'likes\' property to the new blog object if it is not provided', async () => {
     const blog = {
       title: 'Test blog',
       author: 'Test Author',
@@ -70,7 +70,27 @@ describe('route POST /', () => {
     expect(postreq.body.likes).toBeDefined()
     expect(postreq.body.likes).toBe(0)
   })
+
+  test('will respond with status code 400 if either \'title\' or \'url\' property is missing from request body', async () => {
+    let blog = {
+      author: 'Test Author',
+      url: 'test url'
+    }
+    await api.post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  
+    blog = {
+      title: 'Test title',
+      author: 'Test Author'
+    }
+  
+    await api.post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  })
 })
+
 
 afterAll(() => {
   mongoose.connection.close()
