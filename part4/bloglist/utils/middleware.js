@@ -16,6 +16,9 @@ const unknownEndpoint = (req, res) => {
 
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message)
+  if (err.name === 'CastError') {
+    res.status(400).send('Malformed ID')
+  }
   next()
 }
 

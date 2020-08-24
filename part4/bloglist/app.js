@@ -8,7 +8,7 @@ const blogRouter = require('./controllers/blogs')
 const logger = require('./utils/logger')
 
 logger.info('Connecting to MongoDB database...')
-mongoose.connect(config.ATLAS_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.ATLAS_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
   .then(() => {
     logger.info('Connection to MongoDB succesfully established!')
   })
