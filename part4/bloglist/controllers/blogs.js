@@ -60,10 +60,10 @@ blogRouter.put('/:id', async (req, res, next) => {
     url: req.body.url,
     likes: req.body.likes
   }
-
+  
   try {
     const response = await Blog.findByIdAndUpdate(req.params.id, updatedBlog, { new: true })
-    if (response._id) {
+    if (response) {
       res.status(200).send(response)
     } else {
       res.status(404).end()

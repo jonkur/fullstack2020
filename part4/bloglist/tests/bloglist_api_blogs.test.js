@@ -219,10 +219,10 @@ describe('route PUT /:id', () => {
   })
 
   test('will respond with 400 if supplied with invalid id', async () => {
-    const id = "abcdefg"
+    const id = 'abcdefg'
     const blog = {
-      title: "faketitle",
-      url: "fakeurl"
+      title: 'faketitle',
+      url: 'fakeurl'
     }
     const res = await api.put(`/api/blogs/${id}`)
       .send(blog)

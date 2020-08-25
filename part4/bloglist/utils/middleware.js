@@ -19,7 +19,14 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'CastError') {
     res.status(400).send('Malformed ID')
   }
-  next()
+  else if (err.name === 'ValidationError') {
+    if (err.message.includes('expected `username` to be unique')) {
+      res.status(409).send(err.message)
+    } else {
+      res.status(400).send(err.message)
+    }
+  }
+  next(err)
 }
 
 module.exports = {

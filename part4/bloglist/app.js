@@ -4,6 +4,7 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
+const userRouter = require('./controllers/users')
 const blogRouter = require('./controllers/blogs')
 const logger = require('./utils/logger')
 
@@ -19,7 +20,8 @@ mongoose.connect(config.ATLAS_URL, { useNewUrlParser: true, useUnifiedTopology: 
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
-app.use('/api/blogs', blogRouter) // routes
+app.use('/api/users', userRouter)
+app.use('/api/blogs', blogRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
