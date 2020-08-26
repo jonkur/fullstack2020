@@ -14,6 +14,14 @@ const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
 }
 
+const tokenExtractor = (req, res, next) => {
+  const auth = req.get('authorization')
+  if (auth && auth.toLowerCase().startsWith('bearer ')) {
+    req.token = auth.substring(7)
+  }
+  next()
+}
+
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message)
   if (err.name === 'CastError') {
@@ -26,11 +34,15 @@ const errorHandler = (err, req, res, next) => {
       res.status(400).send(err.message)
     }
   }
+  else if (err.name === 'JsonWebTokenError') {
+    res.status(401).send('invalid token')
+  }
   next(err)
 }
 
 module.exports = {
   requestLogger,
   unknownEndpoint,
+  tokenExtractor,
   errorHandler
 }
