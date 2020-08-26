@@ -4,7 +4,7 @@ const blogRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 
 blogRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs)
 })
 
@@ -44,11 +44,11 @@ blogRouter.post('/', async (req, res, next) => {
       likes: req.body.likes,
       user: user._id
     })
-  
+
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-  
+
     res.status(201).json(savedBlog)
   } catch (err) {
     next(err)
@@ -57,7 +57,14 @@ blogRouter.post('/', async (req, res, next) => {
 
 blogRouter.delete('/:id', async (req, res, next) => {
   try {
-    await Blog.deleteOne({ _id: req.params.id })
+    const blog = await Blog.findById(req.params.id)
+    if (blog) {
+      const decodedToken = jwt.verify(req.token, process.env.TOKEN_SECRET)
+      if (!decodedToken.id || decodedToken.id !== blog.user.toString()) {
+        return res.status(401).json({ error: 'invalid token' })
+      }
+      await Blog.deleteOne({ _id: req.params.id })
+    }
     res.status(204).end()
   } catch (err) {
     next(err)
@@ -83,7 +90,7 @@ blogRouter.put('/:id', async (req, res, next) => {
     } else {
       res.status(404).end()
     }
-    
+
   } catch (err) {
     next(err)
   }
