@@ -59,7 +59,7 @@ describe('author with most blogs', () => {
 describe('author with most likes', () => {
   test('is the right one', () => {
     const result = listHelper.mostLikes(dummyBlogs)
-    expect(result).toEqual({ author: "Edsger W. Dijkstra", likes: 17 })
+    expect(result).toEqual({ author: 'Edsger W. Dijkstra', likes: 17 })
   })
 
   test('is an empty object if empty list is passed to the function', () => {
