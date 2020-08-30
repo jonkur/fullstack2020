@@ -29,12 +29,12 @@ const Blog = ({ user, blog, handleAddLike, handleDeleteBlog }) => {
 
   if (fullInfoVisible) {
     return (
-      <div style={blogStyle}>
+      <div className='blog' style={blogStyle}>
         <p>Title: {blog.title}</p>
         <p>Author: {blog.author}</p>
         <p>URL: {blog.url}</p>
-        <p>Likes: {blog.likes} <button onClick={addLike}>Like</button></p>
-        <button onClick={toggleExpandBlog}>Shrink</button>
+        <p>Likes: {blog.likes} <button className='likeButton' onClick={addLike}>Like</button></p>
+        <button className='shrinkBlogButton' onClick={toggleExpandBlog}>Shrink</button>
         {user && blog.user.username === user.username &&
           <button onClick={deleteBlog}>Delete</button>
         }
@@ -42,9 +42,9 @@ const Blog = ({ user, blog, handleAddLike, handleDeleteBlog }) => {
     )
   } else {
     return (
-      <div style={blogStyle}>
+      <div className='blog' style={blogStyle}>
         {blog.title} {blog.author}
-        <button onClick={toggleExpandBlog}>View</button>
+        <button className='viewBlogButton' onClick={toggleExpandBlog}>View</button>
         {user && blog.user.username === user.username &&
           <button onClick={deleteBlog}>Delete</button>
         }
