@@ -11,8 +11,6 @@ import loginService from './services/loginService'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [notificationIsVisible, setNotificationIsVisible] = useState(false)
   const [notifciationError, setNotificationError] = useState(false)
   const [notificationMessage, setNotificationMessage] = useState('')
@@ -33,8 +31,7 @@ const App = () => {
     }
   }, [])
 
-  const loginHandler = async (e) => {
-    e.preventDefault()
+  const loginHandler = async (username, password) => {
     const user = await loginService.loginUser(username, password)
     if (user) {
       blogService.setToken(user.token)
@@ -44,11 +41,9 @@ const App = () => {
     } else {
       setNotification('Invalid username or password', true, 3000)
     }
-    setUsername('')
-    setPassword('')
   }
 
-  const logoutHandler = (e) => {
+  const logoutHandler = () => {
     setUser(null)
     blogService.setToken('')
     window.localStorage.removeItem('loggedInUser')
@@ -106,8 +101,8 @@ const App = () => {
       <h2>blogs</h2>
       {notificationIsVisible && Notification(notificationMessage, notifciationError)}
       {user === null
-        ? LoginForm(loginHandler, username, setUsername, password, setPassword)
-        : LogoutForm(logoutHandler, user)}
+        ? <LoginForm loginHandler={loginHandler} />
+        : <LogoutForm logoutHandler={logoutHandler} user={user} />}
       {user &&
         <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
           <NewBlogForm handleCreateBlog={handleCreateBlog} />
