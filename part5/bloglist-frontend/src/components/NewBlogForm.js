@@ -20,6 +20,7 @@ const NewBlogForm = ({ handleCreateBlog }) => {
         <div>
           <label>Blog title:</label>
           <input
+            id='newBlogTitle'
             value={newBlogTitle}
             type='text'
             name='newBlogTitle'
@@ -29,6 +30,7 @@ const NewBlogForm = ({ handleCreateBlog }) => {
         <div>
           <label>Blog author:</label>
           <input
+            id='newBlogAuthor'
             value={newBlogAuthor}
             type='text'
             name='newBlogAuthor'
@@ -38,13 +40,14 @@ const NewBlogForm = ({ handleCreateBlog }) => {
         <div>
           <label>Blog URL:</label>
           <input
+            id='newBlogUrl'
             value={newBlogUrl}
             type='text'
             name='newBlogUrl'
             onChange={({ target }) => setNewBlogUrl(target.value)}
           />
         </div>
-        <input value="Create blog" type='submit' />
+        <input id='newBlogSubmit' value="Create blog" type='submit' />
       </form>
     </div>
   )

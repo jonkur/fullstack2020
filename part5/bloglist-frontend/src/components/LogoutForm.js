@@ -5,7 +5,7 @@ const LogoutForm = ({ logoutHandler, user }) => (
   <div>
     <p>Logged in as {user.username}</p>
     <form onSubmit={logoutHandler}>
-      <input type='submit' value='log out' />
+      <input className='logoutButton' type='submit' value='log out' />
     </form>
   </div>
 )
