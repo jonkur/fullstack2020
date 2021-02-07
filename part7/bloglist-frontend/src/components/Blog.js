@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
-const Blog = ({ user, blog, handleAddLike, handleDeleteBlog }) => {
+const Blog = ({ blog, handleAddLike, handleDeleteBlog }) => {
+  const user = useSelector(state => state.user)
   const [fullInfoVisible, setFullInfoVisible] = useState(false)
 
   const blogStyle = {

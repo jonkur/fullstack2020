@@ -11,24 +11,23 @@ import loginService from './services/loginService'
 
 const App = () => {
   const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
   const notificationMessage = useSelector(state => state.notificationMessage)
   const notificationError = useSelector(state => state.notificationError)
   const notificationVisible = useSelector(state => state.notificationVisible)
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-
+   // todo: look into moving most of the methods from App to child components or action creator middlewares etc.
   useEffect(() => {
     (async () => {
       const blogs = await blogService.getAll()
-      setBlogs(blogs)
+      dispatch({ type: 'SET-BLOGS', payload: { blogs } })
     })()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('loggedInUser')
     if (loggedInUser) {
       const user = JSON.parse(loggedInUser)
-      setUser(user)
+      dispatch({ type: 'SET-USER', payload: { user } })
       blogService.setToken(user.token)
     }
   }, [])
@@ -38,7 +37,7 @@ const App = () => {
     if (user) {
       blogService.setToken(user.token)
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-      setUser(user)
+      dispatch({ type: 'SET-USER', payload: { user } })
       setNotification(`Logged in as ${user.username}`, false, 3000)
     } else {
       setNotification('Invalid username or password', true, 3000)
@@ -46,7 +45,7 @@ const App = () => {
   }
 
   const logoutHandler = () => {
-    setUser(null)
+    dispatch({ type: 'SET-USER', payload: { user: null } })
     blogService.setToken('')
     window.localStorage.removeItem('loggedInUser')
     setNotification('You have been logged out', false, 3000)
@@ -59,7 +58,7 @@ const App = () => {
       setNotification('Blog entry creation failed', true, 3000)
     } else {
       const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
+      dispatch({ type: 'SET-BLOGS', payload: { blogs: updatedBlogs } })
       setNotification('New blog entry created!', false, 3000)
     }
   }
@@ -70,7 +69,7 @@ const App = () => {
       setNotification('Error adding like to blog entry!', true, 3000)
     } else {
       const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
+      dispatch({ type: 'SET-BLOGS', payload: { blogs: updatedBlogs } })
     }
   }
 
@@ -78,7 +77,7 @@ const App = () => {
     const res = await blogService.deleteBlog(blogObj)
     if (res && res.status === 204) {
       const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs)
+      dispatch({ type: 'SET-BLOGS', payload: { blogs: updatedBlogs } })
       setNotification('Blog entry deleted.', false, 3000)
     } else {
       setNotification('Error deleting blog entry!', true, 3000)
@@ -100,13 +99,13 @@ const App = () => {
       {notificationVisible && Notification(notificationMessage, notificationError)}
       {user === null
         ? <LoginForm loginHandler={loginHandler} />
-        : <LogoutForm logoutHandler={logoutHandler} user={user} />}
+        : <LogoutForm logoutHandler={logoutHandler} />}
       {user &&
         <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
           <NewBlogForm handleCreateBlog={handleCreateBlog} />
         </Togglable>
       }
-      <BlogListing user={user} blogs={blogs} handleAddLike={handleAddLike} handleDeleteBlog={handleDeleteBlog} />
+      <BlogListing handleAddLike={handleAddLike} handleDeleteBlog={handleDeleteBlog} />
     </div>
   )
 }

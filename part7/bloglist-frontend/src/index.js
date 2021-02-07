@@ -29,6 +29,12 @@ const reducer = (state = initialState, action) => {
         notificationError: false,
         notificationMessage: ''
       }
+    case 'SET-BLOGS':
+      const { blogs } = action.payload
+      return { ...state, blogs }
+    case 'SET-USER':
+      const { user } = action.payload
+      return { ...state, user }
     default:
       return state
   }
