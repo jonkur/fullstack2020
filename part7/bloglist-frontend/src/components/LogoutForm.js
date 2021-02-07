@@ -1,14 +1,19 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { logoutUserAsync } from '../actions/userActions'
 
-const LogoutForm = ({ logoutHandler }) => {
-  const user = useSelector(state => state.user)
+const LogoutForm = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.userReducer.user)
+
+  const logoutUser = () => {
+    dispatch(logoutUserAsync())
+  }
 
   return (
     <div>
       <p>Logged in as {user.username}</p>
-      <form onSubmit={logoutHandler}>
+      <form onSubmit={logoutUser}>
         <input className='logoutButton' type='submit' value='log out' />
       </form>
     </div>
@@ -16,7 +21,6 @@ const LogoutForm = ({ logoutHandler }) => {
 }
 
 LogoutForm.propTypes = {
-  logoutHandler: PropTypes.func.isRequired
 }
 
 export default LogoutForm

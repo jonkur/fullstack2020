@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { loginUserAsync } from '../actions/userActions'
 
-const LoginForm = ({ loginHandler }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const loginUser = (e) => {
     e.preventDefault()
-    loginHandler(username, password)
+    dispatch(loginUserAsync(username, password))
     setUsername('')
     setPassword('')
   }
@@ -38,7 +40,6 @@ const LoginForm = ({ loginHandler }) => {
 }
 
 LoginForm.propTypes = {
-  loginHandler: PropTypes.func.isRequired
 }
 
 export default LoginForm

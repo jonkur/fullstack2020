@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { updateBlogAsync, deleteBlogAsync } from '../actions/blogActions'
 
-const Blog = ({ blog, handleAddLike, handleDeleteBlog }) => {
-  const user = useSelector(state => state.user)
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.userReducer.user)
   const [fullInfoVisible, setFullInfoVisible] = useState(false)
 
   const blogStyle = {
@@ -16,12 +18,12 @@ const Blog = ({ blog, handleAddLike, handleDeleteBlog }) => {
       ...blog,
       likes: blog.likes + 1
     }
-    handleAddLike(updatedBlog)
+    dispatch(updateBlogAsync(updatedBlog))
   }
 
   const deleteBlog = () => {
     if (window.confirm(`Are you sure you want to delete ${blog.title}`)) {
-      handleDeleteBlog(blog)
+      dispatch(deleteBlogAsync(blog))
     }
   }
 
