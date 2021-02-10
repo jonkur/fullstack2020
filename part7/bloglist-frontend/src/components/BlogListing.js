@@ -1,5 +1,5 @@
 import React from 'react'
-import Blog from './Blog'
+import BlogCard from './BlogCard'
 import { useSelector } from 'react-redux'
 
 const BlogListing = () => {
@@ -14,7 +14,7 @@ const BlogListing = () => {
   } else {
     return (
       blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <BlogCard key={blog.id} blog={blog} />
       )
     )
   }

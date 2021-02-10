@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateBlogAsync, deleteBlogAsync } from '../actions/blogActions'
+import { useParams } from 'react-router-dom'
+import { updateBlogAsync } from '../actions/blogActions'
 
-const Blog = ({ blog }) => {
+const User = () => {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.userReducer.user)
-  const [fullInfoVisible, setFullInfoVisible] = useState(false)
+  const { id } = useParams()
+  const blogs = useSelector(state => state.blogReducer.blogs)
+  const [blog, setBlog] = useState(null)
 
-  const blogStyle = {
-    padding: '2px 10px',
-    border: '1px solid black',
-    marginBottom: 5
-  }
+  useEffect(() => {
+    const blogP = blogs.find(b => b.id === id)
+    if (blogP) setBlog(blogP)
+  }, [blogs, id])
 
   const addLike = () => {
     const updatedBlog = {
@@ -21,40 +22,20 @@ const Blog = ({ blog }) => {
     dispatch(updateBlogAsync(updatedBlog))
   }
 
-  const deleteBlog = () => {
-    if (window.confirm(`Are you sure you want to delete ${blog.title}`)) {
-      dispatch(deleteBlogAsync(blog))
-    }
-  }
-
-  const toggleExpandBlog = () => {
-    setFullInfoVisible(!fullInfoVisible)
-  }
-
-  if (fullInfoVisible) {
+  if (!blog) {
     return (
-      <div className='blog' style={blogStyle}>
-        <p>Title: {blog.title}</p>
-        <p>Author: {blog.author}</p>
-        <p>URL: {blog.url}</p>
-        <p>Likes: {blog.likes} <button className='likeButton' onClick={addLike}>Like</button></p>
-        <button className='shrinkBlogButton' onClick={toggleExpandBlog}>Shrink</button>
-        {user && blog.user.username === user.username &&
-          <button onClick={deleteBlog}>Delete</button>
-        }
-      </div>
-    )
-  } else {
-    return (
-      <div className='blog' style={blogStyle}>
-        {blog.title} {blog.author}
-        <button className='viewBlogButton' onClick={toggleExpandBlog}>View</button>
-        {user && blog.user.username === user.username &&
-          <button className='deleteBlogButton' onClick={deleteBlog}>Delete</button>
-        }
-      </div>
+      <p>No blog found.</p>
     )
   }
+
+  return (
+    <div>
+      <h4>{blog.title}</h4>
+      <a href={`//${blog.url}`}>{blog.url}</a>
+      <p>{blog.likes} likes <button className='likeButton' onClick={addLike}>Like</button></p>
+      <p>Added by {blog.user.name}</p>
+    </div>
+  )
 }
 
-export default Blog
+export default User

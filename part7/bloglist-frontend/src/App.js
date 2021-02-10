@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom'
 import BlogListing from './components/BlogListing'
+import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import LogoutForm from './components/LogoutForm'
 import NewBlogForm from './components/NewBlogForm'
@@ -54,13 +56,19 @@ const App = () => {
           <Route path='/users' >
             <Users />
           </Route>
-          <Route exact path='/' >
-            {user &&
+          <Route path='/blogs/:id'>
+            <Blog />
+          </Route>
+          <Route path="/blogs" >
+          {user &&
               <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
                 <NewBlogForm />
               </Togglable>
             }
             <BlogListing />
+          </Route>
+          <Route exact path='/' >
+            <Redirect to='/blogs' />
           </Route>
           <Route path='*' >
             <p>404 - Nothing here...</p>
