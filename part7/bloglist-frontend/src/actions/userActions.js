@@ -1,14 +1,25 @@
 import loginService from '../services/loginService'
 import blogService from '../services/blogs'
+import userService from '../services/userService'
 import { setNotificationWithTimeout } from './notificationActions'
 
 const SET_USER = 'SET_USER'
+const SET_USERS = 'SET_USERS'
 
 export const setUser = user => {
   return {
     type: SET_USER,
     payload: {
       user
+    }
+  }
+}
+
+export const setUsers = users => {
+  return {
+    type: SET_USERS,
+    payload: {
+      users
     }
   }
 }
@@ -35,5 +46,18 @@ export const logoutUserAsync = () => {
     blogService.setToken('')
     window.localStorage.removeItem('loggedInUser')
     dispatch(setNotificationWithTimeout('You have been logged out', false, 3000))
+  }
+}
+
+export const fetchAllUsersAsync = () => {
+  return dispatch => {
+    (async () => {
+      try {
+        const users = await userService.getAll()
+        dispatch(setUsers(users))
+      } catch (err) {
+        dispatch(setNotificationWithTimeout('Error fetching users from the server.', true, 3000))
+      }
+    })()
   }
 }
