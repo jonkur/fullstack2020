@@ -10,13 +10,18 @@ const LogoutForm = () => {
     dispatch(logoutUserAsync())
   }
 
+  const nbPStyle = {
+    display: 'inline-block',
+    margin: '0px 2px'
+  }
+
   return (
-    <div>
-      <p>Logged in as {user.username}</p>
-      <form onSubmit={logoutUser}>
+    <>
+      <p style={nbPStyle} >Logged in as {user.username}</p>
+      <form style={nbPStyle} onSubmit={logoutUser}>
         <input className='logoutButton' type='submit' value='log out' />
       </form>
-    </div>
+    </>
   )
 }
 

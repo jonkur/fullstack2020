@@ -6,6 +6,7 @@ import {
   Route,
   Redirect
 } from 'react-router-dom'
+import NavBar from './components/NavBar'
 import BlogListing from './components/BlogListing'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -44,11 +45,9 @@ const App = () => {
   return (
     <Router>
       <div>
-        <h2>Blogs</h2>
+        <NavBar />
         {notification.visible && Notification(notification.message, notification.error)}
-        {user === null
-          ? <LoginForm />
-          : <LogoutForm />}
+        <h2>Blogs</h2>
         <Switch>
           <Route path='/users/:id'>
             <User />
@@ -60,7 +59,7 @@ const App = () => {
             <Blog />
           </Route>
           <Route path="/blogs" >
-          {user &&
+            {user &&
               <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
                 <NewBlogForm />
               </Togglable>

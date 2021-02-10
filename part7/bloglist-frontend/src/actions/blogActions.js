@@ -1,5 +1,6 @@
 import blogService from '../services/blogs'
 import { setNotificationWithTimeout } from './notificationActions'
+import { fetchAllUsersAsync } from './userActions'
 
 const ADD_BLOG = 'ADD_BLOG'
 const SET_BLOGS = 'SET_BLOGS'
@@ -50,6 +51,7 @@ export const addBlogAsync = (blogObj) => {
         dispatch(setNotificationWithTimeout('Blog entry creation failed', true, 3000))
       } else {
         dispatch(addBlog(blog))
+        dispatch(fetchAllUsersAsync()) // not good! doing this to update users with updated blog listings after adding a new blog. Big overhead probably...
         dispatch(setNotificationWithTimeout('New blog entry created!', false, 3000))
       }
     })()
@@ -91,24 +93,3 @@ export const deleteBlogAsync = (blogObj) => {
     })()
   }
 }
-
-  // const handleDeleteBlog = async (blogObj) => {
-  //   const res = await blogService.deleteBlog(blogObj)
-  //   if (res && res.status === 204) {
-  //     const updatedBlogs = await blogService.getAll()
-  //     dispatch({ type: 'SET-BLOGS', payload: { blogs: updatedBlogs } })
-  //     setNotification('Blog entry deleted.', false, 3000)
-  //   } else {
-  //     setNotification('Error deleting blog entry!', true, 3000)
-  //   }
-  // }
-
-  // const handleAddLike = async (blogObj) => {
-  //   const blog = await blogService.updateBlog(blogObj)
-  //   if (!blog) {
-  //     setNotification('Error adding like to blog entry!', true, 3000)
-  //   } else {
-  //     const updatedBlogs = await blogService.getAll()
-  //     dispatch({ type: 'SET-BLOGS', payload: { blogs: updatedBlogs } })
-  //   }
-  // }

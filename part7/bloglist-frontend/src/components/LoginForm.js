@@ -14,11 +14,16 @@ const LoginForm = () => {
     setPassword('')
   }
 
+  const nbPStyle = {
+    display: 'inline-block',
+    margin: '0px 2px'
+  }
+
   return (
-    <div>
-      <form onSubmit={loginUser}>
+    <>
+      <form style={nbPStyle} onSubmit={loginUser}>
         Username:
-        <input
+        <input style={nbPStyle}
           id="login-username"
           value={username}
           type='text'
@@ -26,7 +31,7 @@ const LoginForm = () => {
           onChange={({ target }) => setUsername(target.value)}
         />
         Password:
-        <input
+        <input style={nbPStyle}
           id="login-password"
           value={password}
           type='password'
@@ -35,7 +40,7 @@ const LoginForm = () => {
         />
         <input id="login-submit" type='submit' />
       </form>
-    </div>
+    </>
   )
 }
 
