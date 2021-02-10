@@ -12,6 +12,7 @@ import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import { setUser } from './actions/userActions'
 import { fetchAllBlogsAsync } from './actions/blogActions'
@@ -47,6 +48,9 @@ const App = () => {
           ? <LoginForm />
           : <LogoutForm />}
         <Switch>
+          <Route path='/users/:id'>
+            <User />
+          </Route>
           <Route path='/users' >
             <Users />
           </Route>
