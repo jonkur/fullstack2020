@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { updateBlogAsync, deleteBlogAsync } from '../actions/blogActions'
+import { TableRow, TableCell, Typography, Button } from '@material-ui/core'
 
 const BlogCard = ({ blog }) => {
   const dispatch = useDispatch()
@@ -47,13 +48,20 @@ const BlogCard = ({ blog }) => {
     )
   } else {
     return (
-      <div className='blog' style={blogStyle}>
-        <Link to={`blogs/${blog.id}`}>{blog.title} - {blog.author}</Link>
-        <button className='viewBlogButton' onClick={toggleExpandBlog}>View</button>
-        {user && blog.user.username === user.username &&
-          <button className='deleteBlogButton' onClick={deleteBlog}>Delete</button>
-        }
-      </div>
+      <TableRow>
+        <TableCell>
+          <Typography component={Link} to={`blogs/${blog.id}`}>{blog.title}</Typography>
+        </TableCell>
+        <TableCell>
+          <Typography>{blog.author}</Typography>
+        </TableCell>
+        <TableCell>
+          {/* <button className='viewBlogButton' onClick={toggleExpandBlog}>View</button> */}
+          {user && blog.user.username === user.username &&
+            <Button className='deleteBlogButton' onClick={deleteBlog}>Delete</Button>
+          }
+        </TableCell>
+      </TableRow >
     )
   }
 }

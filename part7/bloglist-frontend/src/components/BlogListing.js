@@ -1,6 +1,10 @@
 import React from 'react'
 import BlogCard from './BlogCard'
 import { useSelector } from 'react-redux'
+import {
+  Table,
+  TableBody
+} from '@material-ui/core'
 
 const BlogListing = () => {
   const blogs = useSelector(state => state.blogReducer.blogs)
@@ -13,9 +17,13 @@ const BlogListing = () => {
     )
   } else {
     return (
-      blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <BlogCard key={blog.id} blog={blog} />
-      )
+      <Table>
+        <TableBody>
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <BlogCard key={blog.id} blog={blog} />
+          )}
+        </TableBody>
+      </Table>
     )
   }
 }

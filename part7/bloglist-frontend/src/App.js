@@ -19,6 +19,8 @@ import { setUser } from './actions/userActions'
 import { fetchAllBlogsAsync } from './actions/blogActions'
 import { fetchAllUsersAsync } from './actions/userActions'
 
+import Container from '@material-ui/core/Container'
+
 const App = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.userReducer.user)
@@ -42,36 +44,38 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        <NavBar />
-        {notification.visible && Notification(notification.message, notification.error)}
-        <h2>Blogs</h2>
-        <Switch>
-          <Route path='/users/:id'>
-            <User />
-          </Route>
-          <Route path='/users' >
-            <Users />
-          </Route>
-          <Route path='/blogs/:id'>
-            <Blog />
-          </Route>
-          <Route path="/blogs" >
-            {user &&
-              <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
-                <NewBlogForm />
-              </Togglable>
-            }
-            <BlogListing />
-          </Route>
-          <Route exact path='/' >
-            <Redirect to='/blogs' />
-          </Route>
-          <Route path='*' >
-            <p>404 - Nothing here...</p>
-          </Route>
-        </Switch>
-      </div>
+      <Container>
+        <div>
+          <NavBar />
+          {notification.visible && Notification(notification.message, notification.error)}
+          <h2>Blogs</h2>
+          <Switch>
+            <Route path='/users/:id'>
+              <User />
+            </Route>
+            <Route path='/users' >
+              <Users />
+            </Route>
+            <Route path='/blogs/:id'>
+              <Blog />
+            </Route>
+            <Route path="/blogs" >
+              {user &&
+                <Togglable toggleButtonOpenLabel="Create blog" toggleButtonCloseLabel="Cancel" ref={newBlogFormRef} >
+                  <NewBlogForm />
+                </Togglable>
+              }
+              <BlogListing />
+            </Route>
+            <Route exact path='/' >
+              <Redirect to='/blogs' />
+            </Route>
+            <Route path='*' >
+              <p>404 - Nothing here...</p>
+            </Route>
+          </Switch>
+        </div>
+      </Container>
     </Router >
   )
 }

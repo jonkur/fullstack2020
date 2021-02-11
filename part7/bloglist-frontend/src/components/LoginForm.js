@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginUserAsync } from '../actions/userActions'
+import { TextField, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme) => ({
+  formStyle: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  margins: {
+    marginLeft: theme.spacing(1)
+  }
+}))
 
 const LoginForm = () => {
+  const classes = useStyles()
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -14,31 +28,25 @@ const LoginForm = () => {
     setPassword('')
   }
 
-  const nbPStyle = {
-    display: 'inline-block',
-    margin: '0px 2px'
-  }
-
   return (
     <>
-      <form style={nbPStyle} onSubmit={loginUser}>
-        Username:
-        <input style={nbPStyle}
-          id="login-username"
+      <form className={classes.formStyle} onSubmit={loginUser}>
+        <TextField
+          variant='filled'
+          color="secondary"
+          label='Username'
           value={username}
-          type='text'
-          name="username"
           onChange={({ target }) => setUsername(target.value)}
         />
-        Password:
-        <input style={nbPStyle}
-          id="login-password"
+        <TextField
+          variant='filled'
+          color="secondary"
+          label='Password'
           value={password}
           type='password'
-          name='password'
           onChange={({ target }) => setPassword(target.value)}
         />
-        <input id="login-submit" type='submit' />
+        <Button className={classes.margins} variant='contained' type='submit'>Login</Button>
       </form>
     </>
   )
