@@ -1,5 +1,5 @@
 import loginService from '../services/loginService'
-import blogService from '../services/blogs'
+import blogService from '../services/blogService'
 import userService from '../services/userService'
 import { setNotificationWithTimeout } from './notificationActions'
 

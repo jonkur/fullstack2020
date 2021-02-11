@@ -2,6 +2,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const blogRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
+const blog = require('../models/blog')
 
 blogRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -13,6 +14,24 @@ blogRouter.get('/:id', async (req, res, next) => {
     const blog = await Blog.findById(req.params.id)
     if (blog) {
       res.json(blog)
+    } else {
+      res.status(404).send('404 - blog not found')
+    }
+  } catch (err) {
+    next(err)
+  }
+})
+
+blogRouter.post('/:id/comments', async (req, res, next) => {
+  if (!req.body.content) {
+    return res.status(400).end()
+  }
+  try {
+    const blog = await Blog.findById(req.params.id)
+    if (blog) {
+      blog.comments = blog.comments.concat(req.body.content)
+      blog.save()
+      res.status(200).send('Comment added.')
     } else {
       res.status(404).send('404 - blog not found')
     }
