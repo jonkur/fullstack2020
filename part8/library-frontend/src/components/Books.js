@@ -1,11 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
+  const { loading, error, data } = useQuery(GET_ALL_BOOKS)
+  const [books, setBooks] = useState([])
+
+  useEffect(() => {
+    if (data && data.allBooks) {
+      setBooks(data.allBooks)
+    }
+  }, [loading, data])
+
   if (!props.show) {
     return null
   }
 
-  const books = []
+  if (loading || error) {
+    return (
+      <div>
+        { loading && <p>Loading books...</p> }
+        { error && <p>Error loading books!</p> }
+      </div>
+    )
+  }
 
   return (
     <div>
