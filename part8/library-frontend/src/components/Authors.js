@@ -13,6 +13,9 @@ const Authors = (props) => {
   useEffect(() => {
     if (data && data.allAuthors) {
       setAuthors(data.allAuthors)
+      if (data.allAuthors[0]?.name) {
+        setCfName(data.allAuthors[0].name)
+      }
     }
   }, [loading, data])
 
@@ -65,7 +68,12 @@ const Authors = (props) => {
       <h2>Set birthyear</h2>
       <form onSubmit={changeBirthYear} >
         <p>name:
-        <input type="text" value={cfName} onChange={(e) => setCfName(e.target.value)} /></p>
+          <select value={authors[0]?.name ? authors[0].name : ''} onChange={(e) => setCfName(e.target.value)} >
+            {authors.map(a =>
+              <option key={a.name} value={a.name}>{a.name}</option>
+            )}
+          </select>
+        </p>
         <p>born:
         <input type="number" step="1" value={cfYear} onChange={(e) => setCfYear(e.target.value)} /></p>
         <input type="submit" value="Update author" />
