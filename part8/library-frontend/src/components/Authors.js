@@ -68,7 +68,7 @@ const Authors = (props) => {
       <h2>Set birthyear</h2>
       <form onSubmit={changeBirthYear} >
         <p>name:
-          <select value={authors[0]?.name ? authors[0].name : ''} onChange={(e) => setCfName(e.target.value)} >
+          <select value={cfName} onChange={(e) => setCfName(e.target.value)} >
             {authors.map(a =>
               <option key={a.name} value={a.name}>{a.name}</option>
             )}

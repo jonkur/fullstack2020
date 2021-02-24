@@ -74,32 +74,28 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: async () => (await Book.find({})).length,
+    authorCount: async () => (await Author.find({})).length,
     allBooks: async (root, args) => {
       if (!args.author && !args.genre) {
-        const books = await Book.find({}).populate('author')
-        return books
+        return await Book.find({}).populate('author')
       }
-      const filteredBooks = await Book.find({}).populate('author')
-        .filter(b => args.author ? b.author === args.author : b)
-        .filter(b => args.genre ? b.genres.includes(args.genre) : b)
-      return filteredBooks
+      const query = {}
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        query.author = author ? author._id : null
+      }
+      if (args.genre) query.genres = { $in: [args.genre] }
+      return await Book.find(query).populate('author')
     },
     allAuthors: async () => {
       const authors = await Author.find({})
       const books = await Book.find({})
       return authors.map(a => {
-        const bookCount = books.filter(b => b.author.equals(a)).length
-        console.log('a is')
-        console.log(a)
-        return { ...a, bookCount }
+        const bookCount = books.filter(b => b.author._id.equals(a._id)).length
+        return { ...a.toObject(), bookCount }
       })
-    } 
-    // authors.map(a => {
-    //   const bookCount = books.filter(b => b.author === a.name).length
-    //   return { ...a, bookCount }
-    // })
+    }
   },
   Mutation: {
     addBook: async (root, args) => {
@@ -117,14 +113,19 @@ const resolvers = {
         })
       }
     },
-    editAuthor: (root, args) => {
-      const updatedAuthor = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const updatedAuthor = await Author.findOne({ name: args.name })
       if (!updatedAuthor) {
         return null
       }
       updatedAuthor.born = args.setBornTo
-      authors = authors.map(a => a.id === updatedAuthor.id ? updatedAuthor : a)
-      return updatedAuthor
+      try {
+        await updatedAuthor.save()
+        return updatedAuthor
+      } catch (err) {
+        throw new Error(err.message)
+      }
+
     }
   }
 }
