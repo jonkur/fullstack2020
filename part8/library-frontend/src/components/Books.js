@@ -5,12 +5,26 @@ import { GET_ALL_BOOKS } from '../queries'
 const Books = (props) => {
   const { loading, error, data } = useQuery(GET_ALL_BOOKS)
   const [books, setBooks] = useState([])
+  const [genres, setGenres] = useState([])
+  const [genre, setGenre] = useState('')
 
   useEffect(() => {
     if (data && data.allBooks) {
       setBooks(data.allBooks)
     }
   }, [loading, data])
+
+  useEffect(() => {
+    const newGenres = []
+    books.forEach(b => {
+      b.genres.forEach(g => {
+        if (!newGenres.includes(g)) {
+          newGenres.push(g)
+        }
+      })
+    })
+    setGenres(newGenres)
+  }, [books])
 
   if (!props.show) {
     return null
@@ -19,8 +33,8 @@ const Books = (props) => {
   if (loading || error) {
     return (
       <div>
-        { loading && <p>Loading books...</p> }
-        { error && <p>Error loading books!</p> }
+        { loading && <p>Loading books...</p>}
+        { error && <p>Error loading books!</p>}
       </div>
     )
   }
@@ -29,18 +43,25 @@ const Books = (props) => {
     <div>
       <h2>books</h2>
 
+      {genre &&
+        <div>
+          <p>Selected genre: <b>{genre}</b></p>
+          <button onClick={(e) => { setGenre('') }}>Clear</button>
+        </div>
+      }
+
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>
-              author
+            <th style={{ minWidth: '600px', textAlign: 'left' }}>Name</th>
+            <th style={{ minWidth: '200px', textAlign: 'left' }}>
+              Author
             </th>
-            <th>
-              published
+            <th style={{ minWidth: '200px', textAlign: 'left' }}>
+              Published
             </th>
           </tr>
-          {books.map(a =>
+          {books.filter(b => genre === '' || b.genres.includes(genre)).map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author?.name}</td>
@@ -49,6 +70,13 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+
+      <div style={{ maxWidth: '700px' }}>
+        <h4>Select a genre:</h4>
+        {genres.map(g => (
+          <button onClick={(e) => { setGenre(g) }} key={g}>{g}</button>
+        ))}
+      </div>
     </div>
   )
 }
