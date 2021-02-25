@@ -9,6 +9,7 @@ const Authors = (props) => {
   const [authors, setAuthors] = useState([])
   const [cfName, setCfName] = useState('')
   const [cfYear, setCfYear] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
     if (data && data.allAuthors) {
@@ -19,12 +20,19 @@ const Authors = (props) => {
     }
   }, [loading, data])
 
-  const changeBirthYear = (e) => {
+  const changeBirthYear = async (e) => {
     e.preventDefault()
 
-    changeAuthorAge({ variables: { name: cfName, born: parseInt(cfYear) } })
+    try {
+      await changeAuthorAge({ variables: { name: cfName, born: parseInt(cfYear) } })
+    } catch (err) {
+      setErrorMsg(err.message)
+      setTimeout(() => {
+        setErrorMsg('')
+      }, 3000)
+    }
 
-    setCfName('')
+    //setCfName('')
     setCfYear('')
   }
 
@@ -78,6 +86,7 @@ const Authors = (props) => {
         <input type="number" step="1" value={cfYear} onChange={(e) => setCfYear(e.target.value)} /></p>
         <input type="submit" value="Update author" />
       </form>
+      {errorMsg && <p>{errorMsg}</p>}
 
     </div>
   )
