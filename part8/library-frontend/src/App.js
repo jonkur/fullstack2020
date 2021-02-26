@@ -1,18 +1,41 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import { useApolloClient } from '@apollo/client'
+import Recommendations from './components/Recommendations'
+import { useApolloClient, useLazyQuery } from '@apollo/client'
+import { GET_CURRENT_USER } from './queries'
 
 const App = () => {
+  const [getUser, { loading, data }] = useLazyQuery(GET_CURRENT_USER, {
+    fetchPolicy: 'network-only'
+  })
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(false)
+  const [user, setUser] = useState(null)
   const client = useApolloClient()
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  useEffect(() => {
+    if (token) {
+      getUser()
+    }
+  }, [token])
+
+  useEffect(() => {
+    if (data && data.me) {
+      setUser(data.me)
+    }
+  }, [loading, data])
 
   const logout = () => {
     setToken('')
+    setUser(null)
     localStorage.removeItem('libUserToken')
     client.resetStore()
     setPage('authors')
@@ -23,9 +46,10 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        {token && <button onClick={() => setPage('add')}>add book</button>}
-        {!token && <button onClick={() => setPage('login')}>login</button>}
-        {token && <button onClick={logout}>logout</button>}
+        {user && <button onClick={() => setPage('add')}>add book</button>}
+        {!user && <button onClick={() => setPage('login')}>login</button>}
+        {user && <button onClick={() => setPage('recommend')}>recommend</button>}
+        {user && <button onClick={logout}>logout</button>}
       </div>
 
       <Authors
@@ -40,12 +64,16 @@ const App = () => {
         show={page === 'add'}
       />
 
+      <Recommendations
+        show={page === 'recommend'}
+        user={user}
+      />
+
       <Login
         show={page === 'login'}
         setToken={setToken}
         setPage={setPage}
       />
-
     </div>
   )
 }

@@ -41,7 +41,7 @@ const Books = (props) => {
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>Books</h2>
 
       {genre &&
         <div>
