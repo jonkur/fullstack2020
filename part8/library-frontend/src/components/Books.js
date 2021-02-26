@@ -3,10 +3,20 @@ import { useQuery } from '@apollo/client'
 import { GET_ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
-  const { loading, error, data } = useQuery(GET_ALL_BOOKS)
+  const { loading, error, data, startPolling, stopPolling, refetch } = useQuery(GET_ALL_BOOKS, {
+    pollInterval: 2000
+  })
   const [books, setBooks] = useState([])
   const [genres, setGenres] = useState([])
   const [genre, setGenre] = useState('')
+
+  useEffect(() => {
+    if (props.show) {
+      startPolling(2000)
+    } else {
+      stopPolling()
+    }
+  }, [props.show])
 
   useEffect(() => {
     if (data && data.allBooks) {
@@ -25,6 +35,11 @@ const Books = (props) => {
     })
     setGenres(newGenres)
   }, [books])
+
+  const handleSetGenre = (g) => {
+    refetch()
+    setGenre(g)
+  }
 
   if (!props.show) {
     return null
@@ -74,7 +89,7 @@ const Books = (props) => {
       <div style={{ maxWidth: '700px' }}>
         <h4>Select a genre:</h4>
         {genres.map(g => (
-          <button onClick={(e) => { setGenre(g) }} key={g}>{g}</button>
+          <button onClick={(e) => { handleSetGenre(g) }} key={g}>{g}</button>
         ))}
       </div>
     </div>

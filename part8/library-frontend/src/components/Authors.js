@@ -4,12 +4,20 @@ import { useQuery, useMutation } from '@apollo/client'
 import { GET_ALL_AUTHORS, CHANGE_AUTHOR_AGE } from '../queries'
 
 const Authors = (props) => {
-  const { loading, error, data } = useQuery(GET_ALL_AUTHORS)
+  const { loading, error, data, startPolling, stopPolling } = useQuery(GET_ALL_AUTHORS)
   const [changeAuthorAge] = useMutation(CHANGE_AUTHOR_AGE)
   const [authors, setAuthors] = useState([])
   const [cfName, setCfName] = useState('')
   const [cfYear, setCfYear] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+
+  useEffect(() => {
+    if (props.show) {
+      startPolling(2000)
+    } else {
+      stopPolling()
+    }
+  }, [props.show])
 
   useEffect(() => {
     if (data && data.allAuthors) {

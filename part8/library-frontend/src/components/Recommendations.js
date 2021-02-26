@@ -4,7 +4,9 @@ import { GET_CURRENT_USER, GET_BOOKS_BY_GENRE } from '../queries'
 
 const Recommendations = (props) => {
   const [getBooksByGenre,
-    { loading: loadingBooks, error: errorBooks, data: dataBooks }] = useLazyQuery(GET_BOOKS_BY_GENRE)
+    { loading: loadingBooks, error: errorBooks, data: dataBooks }] = useLazyQuery(GET_BOOKS_BY_GENRE, {
+      fetchPolicy: 'cache-and-network'
+    })
   const [favBooks, setFavBooks] = useState([])
 
   useEffect(() => {
