@@ -98,3 +98,20 @@ export const LOGIN_USER = gql`
     }
   }
 `
+
+// Subscriptions
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      _id
+      title
+      author {
+        _id
+        name
+        born
+      }
+      published
+      genres
+    }
+  }
+`

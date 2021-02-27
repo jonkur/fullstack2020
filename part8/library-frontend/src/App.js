@@ -5,8 +5,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommendations from './components/Recommendations'
-import { useApolloClient, useLazyQuery } from '@apollo/client'
-import { GET_CURRENT_USER } from './queries'
+import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
+import { GET_CURRENT_USER, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [getUser, { loading, data }] = useLazyQuery(GET_CURRENT_USER, {
@@ -16,6 +16,13 @@ const App = () => {
   const [token, setToken] = useState(false)
   const [user, setUser] = useState(null)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log('nyt!')
+      console.log(subscriptionData)
+    }
+  })
 
   useEffect(() => {
     getUser()
