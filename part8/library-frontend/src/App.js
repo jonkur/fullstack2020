@@ -6,7 +6,7 @@ import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommendations from './components/Recommendations'
 import { useApolloClient, useLazyQuery, useSubscription } from '@apollo/client'
-import { GET_CURRENT_USER, BOOK_ADDED } from './queries'
+import { GET_CURRENT_USER, BOOK_ADDED, GET_ALL_BOOKS } from './queries'
 
 const App = () => {
   const [getUser, { loading, data }] = useLazyQuery(GET_CURRENT_USER, {
@@ -17,10 +17,23 @@ const App = () => {
   const [user, setUser] = useState(null)
   const client = useApolloClient()
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.id).includes(object.id)
+
+    const dataInstore = client.readQuery({ query: GET_ALL_BOOKS })
+    if (!includedIn(dataInstore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: GET_ALL_BOOKS,
+        data: { allBooks : dataInstore.allBooks.concat(addedBook) }
+      })
+    }
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      console.log('nyt!')
-      console.log(subscriptionData)
+      const addedBook = subscriptionData.data.bookAdded
+      updateCacheWith(addedBook)
     }
   })
 

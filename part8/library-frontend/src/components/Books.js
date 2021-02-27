@@ -10,13 +10,13 @@ const Books = (props) => {
   const [genres, setGenres] = useState([])
   const [genre, setGenre] = useState('')
 
-  useEffect(() => {
-    if (props.show) {
-      startPolling(2000)
-    } else {
-      stopPolling()
-    }
-  }, [props.show])
+  // useEffect(() => {
+  //   if (props.show) {
+  //     startPolling(2000)
+  //   } else {
+  //     stopPolling()
+  //   }
+  // }, [props.show])
 
   useEffect(() => {
     if (data && data.allBooks) {
