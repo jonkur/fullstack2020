@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ApolloServer, UserInputError } = require('apollo-server')
+const { ApolloServer, UserInputError, PubSub } = require('apollo-server')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const Author = require('./models/author')
@@ -11,6 +11,8 @@ const typeDefs = require('./typeDefs')
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_SECRET = process.env.JWT_SECRET
 const DUMMYPASS = process.env.DUMMYPASS
+
+const pubSub = new PubSub()
 
 console.log(`Connecting to ${MONGODB_URI}`)
 
@@ -79,6 +81,7 @@ const resolvers = {
           await author.save()
         }
         const newBook = new Book({ ...args, author })
+        pubSub.publish('BOOK_ADDED', { bookAdded: newBook })
         return await newBook.save()
       } catch (err) {
         throw new UserInputError(err.message, {
@@ -130,6 +133,11 @@ const resolvers = {
       return { value: jwt.sign(uft, JWT_SECRET) }
     }
 
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubSub.asyncIterator(['BOOK_ADDED'])
+    }
   }
 }
 
@@ -150,6 +158,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionUrl}`)
 })
